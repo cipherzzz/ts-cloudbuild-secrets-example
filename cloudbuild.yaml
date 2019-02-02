@@ -1,0 +1,31 @@
+steps:  
+
+# Building image
+# Note: You need a shell to resolve environment variables with $$
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args: [ 
+          '-c',
+          'docker build -t gcr.io/$PROJECT_ID/appengine/ts-cloudbuild-secrets-example:latest -f Dockerfile --build-arg REDIS_PASS=$$REDIS_PW .' 
+        ]
+  secretEnv: ['REDIS_PW']     
+
+# Push Images       
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/appengine/ts-cloudbuild-secrets-example:latest'] 
+  
+
+# Deploy to GAE
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: 
+  - 'app'
+  - 'deploy'
+  - 'app.yaml'
+  - '--image-url'
+  - 'gcr.io/$PROJECT_ID/appengine/ts-cloudbuild-secrets-example:latest'
+
+
+secrets:
+- kmsKeyName: projects/vmi-integration/locations/global/keyRings/vmi-integration-secrets/cryptoKeys/vertigo-js-node-api
+  secretEnv:
+    REDIS_PW: CiQAkmpYKP7L1ELHIrdvp/J43k1w6EN/l4wgVZnBMMhbEr/dFxYSPQBMN3wJgwxNRTNmNpaif4rSOSHKy7gHTamaxsxo3la2qCLJfVSHz8jUA4jERssiMZAeKhHvfp5LBTDvjxk=

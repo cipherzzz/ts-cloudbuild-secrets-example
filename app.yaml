@@ -1,0 +1,2 @@
+service: typescript-ws-template
+runtime: nodejs8
