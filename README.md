@@ -145,5 +145,7 @@ Follow the [cloudbuild-local installation instructions](https://cloud.google.com
 Run the following from the root of the project and the `cloudbuild-local` tool will execute the cloudbuild and deploy the application.
 
 ``` 
-cloud-build-local --config=deploy/cloudbuild.yaml --dryrun=false --substitutions=_ENV=integration,_PROMOTE=--promote .
+cloud-build-local --config=cloudbuild.yaml --dryrun=false .
+```
 
+Access the `https://<service-url>/secret` to see if the decryption worked or not. You should see something like - `{"message":"Secret Correct"}`
